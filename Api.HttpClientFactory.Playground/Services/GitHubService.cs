@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Api.HttpClientFactory.Playground.Services
@@ -10,23 +11,19 @@ namespace Api.HttpClientFactory.Playground.Services
 
     public class GitHubService : IGitHubService
     {
-        private readonly HttpClient httpClient;
+        private readonly HttpClient _httpClient;
 
         public GitHubService(HttpClient httpClient)
         {
-            // GitHub API versioning
-            httpClient.DefaultRequestHeaders.Add("Accept",
-                "application/vnd.github.v3+json");
-            // GitHub requires a user-agent
-            httpClient.DefaultRequestHeaders.Add("User-Agent",
-                "HttpClientFactory-Sample");
-
-            this.httpClient = httpClient;
+            httpClient.BaseAddress = new Uri("https://api.github.com/");
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
+            _httpClient = httpClient;
         }
 
         public async Task<string> GetAspNetDocsIssues()
         {
-            using var response = await httpClient.GetAsync(
+            using var response = await _httpClient.GetAsync(
                 "/repos/aspnet/AspNetCore.Docs/issues?state=open&sort=created&direction=desc");
 
             response.EnsureSuccessStatusCode();

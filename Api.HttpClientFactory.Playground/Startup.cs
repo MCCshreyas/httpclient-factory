@@ -1,10 +1,8 @@
 ﻿using Api.HttpClientFactory.Playground.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Api.HttpClientFactory.Playground
 {
@@ -20,9 +18,9 @@ namespace Api.HttpClientFactory.Playground
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc();
             services.AddHttpClient();
-            services.AddHttpClient<IGitHubService, GitHubService>(client => client.BaseAddress = new Uri("https://api.github.com/"));
+            services.AddHttpClient<IGitHubService, GitHubService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

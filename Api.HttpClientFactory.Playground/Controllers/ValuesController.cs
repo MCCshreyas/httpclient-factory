@@ -1,7 +1,5 @@
 ﻿using Api.HttpClientFactory.Playground.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,11 +9,11 @@ namespace Api.HttpClientFactory.Playground.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IServiceProvider service;
+        private readonly IGitHubService _gitHubService;
 
-        public ValuesController(IServiceProvider service)
+        public ValuesController(IGitHubService gitHubService)
         {
-            this.service = service;
+            _gitHubService = gitHubService;
         }
 
         [HttpGet]
@@ -25,11 +23,7 @@ namespace Api.HttpClientFactory.Playground.Controllers
 
             for (int i = 0; i < 100; i++)
             {
-                using (var scope = service.CreateScope())
-                {
-                    var gitHubService = scope.ServiceProvider.GetService<IGitHubService>();
-                    tasks.Add(gitHubService.GetAspNetDocsIssues());
-                }
+                tasks.Add(_gitHubService.GetAspNetDocsIssues());
             }
 
             await Task.WhenAll(tasks.ToArray());
